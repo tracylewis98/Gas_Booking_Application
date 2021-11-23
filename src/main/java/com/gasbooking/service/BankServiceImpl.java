@@ -39,7 +39,7 @@ public class BankServiceImpl implements IBankService{
 		
 	
 	@Override
-	public Bank deleteBank(Bank bank,int bankId)throws BankNotFoundException {
+	public Bank deleteBank(int bankId)throws BankNotFoundException {
 		Optional<Bank> optional=bankRepository.findById(bankId);
 		if(optional.isPresent()) {
 			Bank deletedBank=optional.get();

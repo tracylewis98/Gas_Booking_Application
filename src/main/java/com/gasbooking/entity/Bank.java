@@ -2,34 +2,38 @@ package com.gasbooking.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 public class Bank {
 	
 	//data members
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int bankId;
 	
-	//@NotNull(message="Bank name cannot be null")
+	
+	@Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+$", message = "Given Bank name is not valid/Exist.")
 	private String bankName;
 	
-	//@NotNull(message="Address cannot be null")
 	private String address;
 	
+	//constructors
 	public Bank() {
 		super();
 	}
 	
-	public Bank(int bankId, String bankName, String address) {
+	public Bank(int bankId, @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+$", message = "Given Bank name is not valid/Exist.")String bankName, String address) {
 		super();
 		this.bankId = bankId;
 		this.bankName = bankName;
 		this.address = address;
 	}
-    
+	
+    //getters and setters
 	public int getBankId() {
 		return bankId;
 	}

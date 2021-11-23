@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,18 +21,18 @@ public class BankController {
 	IBankService bankService;
 	
 	@PostMapping("/insertBank")
-	public ResponseEntity<?>insertBank(Bank bank){
+	public ResponseEntity<?>insertBank(@RequestBody Bank bank){
 		Bank insertedBank=bankService.insertBank(bank);
 		return new ResponseEntity<Bank>(insertedBank,HttpStatus.CREATED);
 	}
 	@PutMapping("/updateBank")
-	public ResponseEntity<?>updateBank(Bank bank)throws BankNotFoundException{
+	public ResponseEntity<?>updateBank(@RequestBody Bank bank)throws BankNotFoundException{
 		Bank updatedBank=bankService.updateBank(bank);
 	    return new ResponseEntity<Bank>(updatedBank,HttpStatus.OK);
 	}
 	@DeleteMapping("/deleteBank")
-	public ResponseEntity<?>deleteBank(Bank bank,int bankId)throws BankNotFoundException{
-		Bank deletedBank=bankService.deleteBank(bank, bankId);
+	public ResponseEntity<?>deleteBank(int bankId)throws BankNotFoundException{
+		Bank deletedBank=bankService.deleteBank(bankId);
 		return new ResponseEntity<Bank>(deletedBank,HttpStatus.OK);
 	}
 
