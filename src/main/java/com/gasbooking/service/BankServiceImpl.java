@@ -5,13 +5,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.gasbooking.entity.Bank;
 import com.gasbooking.exception.BankNotFoundException;
 import com.gasbooking.repository.IBankRepository;
 
-public class BankServiceImpl implements IBankService{
-	
+@Service
+public class BankServiceImpl implements IBankService{	
 	@Autowired
 	IBankRepository bankRepository;
 
