@@ -3,13 +3,20 @@ package com.gasbooking.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Bank {
+	
+	//data members
 	@Id
 	@GeneratedValue
 	private int bankId;
+	
+	//@NotNull(message="Bank name cannot be null")
 	private String bankName;
+	
+	//@NotNull(message="Address cannot be null")
 	private String address;
 	
 	public Bank() {
@@ -46,6 +53,8 @@ public class Bank {
 	public String toString() {
 		return "Bank [bankId=" + bankId + ", bankName=" + bankName + ", address=" + address + "]";
 	}
+
+	
 	
 	
 }
