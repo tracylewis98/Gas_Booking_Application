@@ -29,6 +29,7 @@ public class BankServiceImpl implements IBankService{
 		Optional<Bank> optional=bankRepository.findById(bankId);
 		if(optional.isPresent()) {
 			Bank b1=optional.get();
+			b1.setBankName(bank.getBankName());
 			Bank updatedBank=bankRepository.save(b1);
 			return updatedBank;	
 		}

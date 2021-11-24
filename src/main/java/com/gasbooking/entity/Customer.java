@@ -1,71 +1,101 @@
 package com.gasbooking.entity;
-
+import java.io.Serializable;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Optional;
+import com.gasbooking.entity.Bank;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.persistence.CascadeType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.gasbooking.entity.Customer;
+import com.gasbooking.exception.CustomerNotFoundException;
+import com.gasbooking.repository.ICustomerRepository;
 
 @Entity
-public class Customer {
+@Table(name = "customer")
+public class Customer implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 195158816166559020L;
+
+	// data members
+	
 	@Id
 	@GeneratedValue
+	@Column(name = "customer_id")
 	private int customerId;
-	
-	private int cylinderId;
-	
-	private int bankId;
-	
-	@NotBlank(message = "Account number can't be empty.")
-	@Size(min = 10, max = 16)
+
+	@NotNull
+	@Column(name = "account_no")
 	private int accountNo;
-	
-	@NotBlank(message = "IFSC No can't be empty.")
-	@Size(min =6, max = 8)
+
+	@Pattern(regexp = "^[A-Z]{4}0[0-9]{6,7}$", message = "Given IFSC No. is not valid.")
+	@Column(name = "ifsc_no")
 	private String ifscNo;
-	
-	@NotBlank(message = "PAN no. can't be empty")
-	@Size(min = 8, max = 10)
+
+	@Pattern(regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$", message = "Given PAN No. is not valid.")
+	@Column(name = "pan")
 	private String pan;
-	
+
+	//@JsonBackReference
+	//@OneToOne(targetEntity = Cylinder.class, cascade = CascadeType.ALL)
+	//@JoinColumn(name = "cylinder_id")
+	//private Cylinder cylinder;
+
+	@JsonBackReference
+	@OneToOne(targetEntity = Bank.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "bank_id")
+	private Bank bank;
+
+	//@JsonManagedReference
+	//@OneToOne(targetEntity = SurrenderCylinder.class, mappedBy = "customer", cascade = CascadeType.ALL)
+	//private SurrenderCylinder surrenderCylinder;
+
+	//@JsonManagedReference
+	//@OneToMany(targetEntity = GasBooking.class, cascade = CascadeType.ALL, mappedBy = "customerId")
+	//private List<GasBooking> gasBooking;
+
 	// constructors
 	public Customer() {
 		super();
 	}
 	
-	public Customer(int customerId, int cylinderId, int bankId, int accountNo, String ifscNo, String pan) {
+	public Customer(int customerId, @NotNull int accountNo,
+			@Pattern(regexp = "^[A-Z]{4}0[0-9]{6,7}$", message = "Given IFSC No. is not valid.") String ifscNo,
+			@Pattern(regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$", message = "Given PAN No. is not valid.") String pan, Bank bank) {
 		super();
 		this.customerId = customerId;
-		this.cylinderId = cylinderId;
-		this.bankId = bankId;
 		this.accountNo = accountNo;
 		this.ifscNo = ifscNo;
 		this.pan = pan;
+		//this.cylinder = cylinder;
+		this.bank = bank;
 	}
 
-	//getters and setters
+	// getters and setters
+	
 	public int getCustomerId() {
 		return customerId;
 	}
 
 	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
-	}
-
-	public int getCylinderId() {
-		return cylinderId;
-	}
-
-	public void setCylinderId(int cylinderId) {
-		this.cylinderId = cylinderId;
-	}
-
-	public int getBankId() {
-		return bankId;
-	}
-
-	public void setBankId(int bankId) {
-		this.bankId = bankId;
 	}
 
 	public int getAccountNo() {
@@ -92,11 +122,44 @@ public class Customer {
 		this.pan = pan;
 	}
 
+	/*public Cylinder getCylinder() {
+		return cylinder;
+	}
+
+	public void setCylinder(Cylinder cylinder) {
+		this.cylinder = cylinder;
+	}*/
+
+	public Bank getBank() {
+		return bank;
+	}
+
+	public void setBank(Bank bank) {
+		this.bank = bank;
+	}
+/*
+	public SurrenderCylinder getSurrenderCylinder() {
+		return surrenderCylinder;
+	}
+
+	public void setSurrenderCylinder(SurrenderCylinder surrenderCylinder) {
+		this.surrenderCylinder = surrenderCylinder;
+	}
+
+	public List<GasBooking> getGasBooking() {
+		return gasBooking;
+	}
+
+	public void setGasBooking(List<GasBooking> gasBooking) {
+		this.gasBooking = gasBooking;
+	}*/
+
+	// toString
+	
 	@Override
 	public String toString() {
-		return "Customer [customerId=" + customerId + ", cylinderId=" + cylinderId + ", bankId=" + bankId
-				+ ", accountNo=" + accountNo + ", ifscNo=" + ifscNo + ", pan=" + pan + "]";
+		return "Customer [customerId=" + customerId + ", accountNo=" + accountNo + ", ifscNo=" + ifscNo + ", pan=" + pan
+				+ ", bank=" + bank +"]";
 	}
 	
-
 }
