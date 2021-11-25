@@ -2,6 +2,8 @@ package com.gasbooking.service;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -15,6 +17,7 @@ import com.gasbooking.repository.IBankRepository;
 public class BankServiceImpl implements IBankService{	
 	@Autowired
 	IBankRepository bankRepository;
+	Logger logger=LoggerFactory.getLogger(BankServiceImpl.class);
 
 	@Override
 	public Bank insertBank(Bank bank)

@@ -1,7 +1,9 @@
 package com.gasbooking.service;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,7 @@ public class SurrenderCylinderServiceImpl implements ISurrenderCylinderService {
 
 	@Override
 	public SurrenderCylinder deleteSurrenderCylinder(int surrenderCylinderId) throws CylinderNotFoundException {
-		Optional<SurrenderCylinder> optional = surrendercylinderrepository.findById(surrenderCylinderId);
+		Optional<SurrenderCylinder> optional = surrendercylinderrepository.findAll();
 		
 		if(optional.isPresent()) {
 			SurrenderCylinder gotCylinder = optional.get();

@@ -44,7 +44,7 @@ public class BankServiceImplTest {
 		b1.setBankName("ICICI");
 		b1.setAddress("msg");
 		Optional<Bank> b2=Optional.of(b1);
-		Mockito.when(bankRepository.findById(1323)).thenReturn(b2);
+		Mockito.when(bankRepository.findById(1)).thenReturn(b2);
 		Mockito.when(bankRepository.save(b1)).thenReturn(b1);
 		b1.setBankId(1);
 		b1.setCustomer(c);
