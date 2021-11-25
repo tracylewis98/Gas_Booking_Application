@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import com.gasbooking.entity.Customer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -31,10 +32,11 @@ public class Bank implements Serializable{
 	@Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+$", message = "Given Bank name is not valid/Exist.")
 	@Column(name = "bank_name")
 	private String bankName;
+	
 	private String address;
 	
-	//@JsonManagedReference
-	//@OneToOne(targetEntity = Customer.class, mappedBy = "bank")
+	@JsonBackReference(value = "2")
+//	@OneToOne(targetEntity = Customer.class, mappedBy = "bank")
 	private Customer customer;
 	
 	// constructors
@@ -43,18 +45,17 @@ public class Bank implements Serializable{
 		super();
 	}
 	
+	// getters and setters
+
 	public Bank(int bankId,
-			@Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+$", message = "Given Bank name is not valid/Exist.") String bankName,String address,
-			Customer customer) {
+			@Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+$", message = "Given Bank name is not valid/Exist.") String bankName,
+			String address) {
 		super();
 		this.bankId = bankId;
 		this.bankName = bankName;
-		this.address=address;
-		this.customer = customer;
+		this.address = address;
 	}
 
-	// getters and setters
-	
 	public int getBankId() {
 		return bankId;
 	}
@@ -71,6 +72,14 @@ public class Bank implements Serializable{
 		this.bankName = bankName;
 	}
 	
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+	
 	public String getAddress() {
 		return address;
 	}
@@ -79,22 +88,11 @@ public class Bank implements Serializable{
 		this.address = address;
 	}
 
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
 	// toString
+	
 	@Override
 	public String toString() {
-		return "Bank [bankId=" + bankId + ", bankName=" + bankName + ", address=" + address + ", customer=" + customer
-				+ "]";
+		return "Bank [bankId=" + bankId + ", bankName=" + bankName + ", address=" + address + "]";
 	}
-
-	
-	
-	
 	
 }

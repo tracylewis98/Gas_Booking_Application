@@ -1,18 +1,19 @@
 package com.gasbooking.service;
 
-
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gasbooking.entity.Customer;
 import com.gasbooking.exception.CustomerNotFoundException;
 import com.gasbooking.repository.ICustomerRepository;
+
+
+
 
 @Service
 public class CustomerServiceImpl implements ICustomerService {
@@ -21,7 +22,6 @@ public class CustomerServiceImpl implements ICustomerService {
 	ICustomerRepository customerRepository;
 
 	// inserting a single object
-	@Transactional
 	@Override
 	public Customer insertCustomer(Customer customer) {
 		
@@ -31,19 +31,25 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	// updating a single object
 	@Override
-	public Customer updateCustomer(Customer customer) throws InputMismatchException, CustomerNotFoundException {
-		Integer getId = Integer.valueOf(customer.getCustomerId());
+	public Customer updateCustomer(int customerId, Customer customer) throws NumberFormatException, InputMismatchException, CustomerNotFoundException {
+		Integer getId = Integer.valueOf(customerId);
 
 		if (getId instanceof Integer) {
-			Optional<Customer> optional = customerRepository.findById(customer.getCustomerId());
+			Optional<Customer> optional = customerRepository.findById(getId);
 
 			if (optional.isPresent()) {
 				Customer gotCustomer = optional.get();
+				gotCustomer.setUsername(customer.getUsername());
+				gotCustomer.setPassword(customer.getPassword());
+				gotCustomer.setAddress(customer.getAddress());
+				gotCustomer.setEmail(customer.getEmail());
+				gotCustomer.setMobileNumber(customer.getMobileNumber());
 				gotCustomer.setAccountNo(customer.getAccountNo());
 				gotCustomer.setIfscNo(customer.getIfscNo());
 				gotCustomer.setPan(customer.getPan());
-//				gotCustomer.setBank(customer.getBank());
-//				gotCustomer.setCylinder(customer.getCylinder());
+				gotCustomer.setBank(customer.getBank());
+				gotCustomer.setCylinder(customer.getCylinder());
+				gotCustomer.setGasBooking(customer.getGasBooking());
 				Customer updateCustomer = customerRepository.save(gotCustomer);
 				return updateCustomer;
 			}
@@ -59,7 +65,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	// deleting a single object by id
 	@Override
-	public Customer deleteCustomer(int customerId) throws InputMismatchException, CustomerNotFoundException {
+	public Customer deleteCustomer(int customerId) throws NumberFormatException, InputMismatchException, CustomerNotFoundException {
 
 		Integer id = Integer.valueOf(customerId);
 
@@ -82,7 +88,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	// getting list of object
 	@Override
-	public List<Customer> viewCustomers() throws InputMismatchException, CustomerNotFoundException {
+	public List<Customer> viewCustomers() throws NumberFormatException, InputMismatchException, CustomerNotFoundException {
 
 		List<Customer> getAllCustomer = customerRepository.findAll();
 		if (getAllCustomer.isEmpty()) {
@@ -93,7 +99,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	// getting a single object
 	@Override
-	public Customer viewCustomer(int customerId) throws InputMismatchException, CustomerNotFoundException {
+	public Customer viewCustomer(int customerId) throws NumberFormatException, InputMismatchException, CustomerNotFoundException {
 		Integer getId = Integer.valueOf(customerId);
 
 		if (getId instanceof Integer) {
@@ -106,8 +112,31 @@ public class CustomerServiceImpl implements ICustomerService {
 				throw new CustomerNotFoundException("There are no such customer is present in the database.");
 			}
 		} else {
-			throw new InputMismatchException("ID should be a number type.");
+			throw new NumberFormatException("ID should be a number type.");
 		}
+	}
+
+	@Override
+	public Customer validateCustomer(String username, String password) throws NullPointerException, NumberFormatException, InputMismatchException, CustomerNotFoundException {
+		
+		if(username!=null) {
+			if(password!=null) {
+				Customer validCustomer = customerRepository.findByUsernameAndPassword(username, password);
+				if(validCustomer != null) {
+					return validCustomer;
+				}
+				else {
+					throw new CustomerNotFoundException("Username or password is not exist. please try again.");
+				}
+			}
+			else {
+				throw new CustomerNotFoundException("Please provide the password.");
+			}
+		}
+		else {
+			throw new CustomerNotFoundException("Please provide the username.");
+		}
+		
 	}
 
 }

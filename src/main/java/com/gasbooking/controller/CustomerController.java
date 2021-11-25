@@ -24,36 +24,14 @@ import com.gasbooking.service.ICustomerService;
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
+
 	@Autowired
-	ICustomerService customerService;
+	ICustomerService customerSer;
 
 	@PostMapping("/addCustomer")
 	public ResponseEntity<?> insertCustomer(@Valid @RequestBody Customer customer) {
-		Customer addedCustomer = customerService.insertCustomer(customer);
+		Customer addedCustomer = customerSer.insertCustomer(customer);
 		return new ResponseEntity<Customer>(addedCustomer, HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/updateCustomer")
-	public ResponseEntity<?> updateCustomer(@RequestBody Customer customer) throws InputMismatchException, CustomerNotFoundException {
-		Customer updatedCustomer = customerService.updateCustomer(customer);
-		return new ResponseEntity<Customer>(updatedCustomer, HttpStatus.OK);
-	}
-	
-	@DeleteMapping("/deleteCustomer/{customerId}")
-	public ResponseEntity<?> deleteCustomer(@PathVariable int customerId) throws InputMismatchException, CustomerNotFoundException {
-		Customer deletedCustomer = customerService.deleteCustomer(customerId);
-		return new ResponseEntity<Customer>(deletedCustomer, HttpStatus.OK);
-	}
-	
-	@GetMapping("/getAllCustomer")
-	public ResponseEntity<?> viewCustomers() throws InputMismatchException, CustomerNotFoundException {
-		List<Customer> getAllCustomers = customerService.viewCustomers();
-		return new ResponseEntity<List<Customer>>(getAllCustomers, HttpStatus.OK);
-	}
-	
-	@GetMapping("/getSingleCustomer/{customerId}")
-	public ResponseEntity<?> viewCustomer(@PathVariable int customerId) throws InputMismatchException, CustomerNotFoundException {
-		Customer getSingleCustomer = customerService.viewCustomer(customerId);
-		return new ResponseEntity<Customer>(getSingleCustomer, HttpStatus.OK);
-	}
 }
